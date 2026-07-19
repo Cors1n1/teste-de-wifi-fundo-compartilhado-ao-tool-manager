@@ -1,0 +1,26 @@
+{
+  "name": "teste-wifi-portatil",
+  "version": "1.0.0",
+  "description": "Teste de velocidade WiFi portátil",
+  "main": "main.js",
+  "scripts": {
+    "prestart": "node sync.js",
+    "start": "electron .",
+    "prebuild": "node sync.js",
+    "build": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.corsini.testewifi",
+    "productName": "Teste WiFi Portátil",
+    "win": {
+      "target": "portable",
+      "icon": "build/icon.png"
+    }
+  },
+  "author": "Corsini",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}
