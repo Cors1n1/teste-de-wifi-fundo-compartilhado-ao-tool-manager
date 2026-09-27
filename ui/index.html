@@ -11,8 +11,23 @@
 <body>
     <div class="widget-container">
         <!-- Header -->
-        <div class="header">
-            <div class="title">
+        
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab(this, 'speedtest')">
+                <i class="fa-solid fa-gauge-high"></i> Velocidade
+            </button>
+            <button class="tab-btn" onclick="switchTab(this, 'radar')">
+                <i class="fa-solid fa-satellite-dish"></i> Radar
+            </button>
+            <button class="tab-btn" onclick="switchTab(this, 'network')">
+                <i class="fa-solid fa-network-wired"></i> Rede
+            </button>
+            <div class="header-actions" style="margin-left: auto;">
+                <button class="icon-btn" onclick="window.api.quitApp()" title="Sair"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+<div class="header" style="display:none;">
+            <div class="title" style="font-size: 13px;">
                 <i class="fa-solid fa-wifi" style="color: var(--accent); margin-right: 5px; filter: drop-shadow(0 0 5px var(--accent));"></i> SpeedTest
             </div>
             <div class="header-actions">
@@ -21,42 +36,73 @@
         </div>
 
         <!-- Dashboard -->
-        <div class="system-dashboard">
-            <div class="dash-main" style="justify-content: center; text-align: center; margin-bottom: 10px;">
-                <div class="dash-time" id="statusText" style="font-size: 20px;">Pronto para iniciar</div>
-                <div class="dash-weather" id="serverInfo" style="margin-top: 10px; justify-content: center; background: transparent; border: none; box-shadow: none;"></div>
+        <div id="tab-speedtest" class="tab-content active">
+        <div class="system-dashboard" style="padding: 8px 12px 5px 12px; gap: 8px;">
+            <div class="dash-main" style="justify-content: center; text-align: center;">
+                <div class="dash-time" id="statusText" style="font-size: 14px; margin-bottom: 2px;">Pronto para iniciar</div>
+                <div class="dash-weather" id="serverInfo" style="margin-top: 0px; justify-content: center; background: transparent; border: none; box-shadow: none; font-size: 10px; padding: 2px;"></div>
             </div>
             
-            <div class="dash-metrics" style="flex-direction: column;">
-                <div class="metric-chip" style="padding: 15px; justify-content: space-between; padding-left: 20px; padding-right: 20px;">
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <i class="fa-solid fa-stopwatch" style="font-size: 16px;"></i> 
-                        <span style="font-size: 13px; color: var(--text-dim);">PING</span>
+            <div class="dash-metrics" style="flex-direction: row; gap: 6px;">
+                <div class="metric-chip" style="padding: 6px 4px; flex-direction: column; align-items: center;">
+                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
+                        <i class="fa-solid fa-stopwatch" style="font-size: 11px;"></i> 
+                        <span style="font-size: 9px; color: var(--text-dim);">PING</span>
                     </div>
-                    <span class="value" id="pingValue" style="font-size: 20px; font-weight: 800; color: var(--text-primary);">-- <small style="font-size: 11px; color: var(--text-dim); font-weight: 500;">ms</small></span>
+                    <span class="value" id="pingValue" style="font-size: 14px; font-weight: 800; color: var(--text-primary);">-- <small style="font-size: 9px; color: var(--text-dim);">ms</small></span>
                 </div>
 
-                <div class="metric-chip" style="padding: 15px; justify-content: space-between; padding-left: 20px; padding-right: 20px;">
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <i class="fa-solid fa-download" style="font-size: 16px;"></i> 
-                        <span style="font-size: 13px; color: var(--text-dim);">DOWNLOAD</span>
+                <div class="metric-chip" style="padding: 6px 4px; flex-direction: column; align-items: center;">
+                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
+                        <i class="fa-solid fa-download" style="font-size: 11px;"></i> 
+                        <span style="font-size: 9px; color: var(--text-dim);">DOWN</span>
                     </div>
-                    <span class="value" id="downloadValue" style="font-size: 20px; font-weight: 800; color: var(--success);">-- <small style="font-size: 11px; color: var(--text-dim); font-weight: 500;">Mbps</small></span>
+                    <span class="value" id="downloadValue" style="font-size: 14px; font-weight: 800; color: var(--success);">-- <small style="font-size: 9px; color: var(--text-dim);">Mb</small></span>
                 </div>
 
-                <div class="metric-chip" style="padding: 15px; justify-content: space-between; padding-left: 20px; padding-right: 20px;">
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <i class="fa-solid fa-upload" style="font-size: 16px;"></i> 
-                        <span style="font-size: 13px; color: var(--text-dim);">UPLOAD</span>
+                <div class="metric-chip" style="padding: 6px 4px; flex-direction: column; align-items: center;">
+                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
+                        <i class="fa-solid fa-upload" style="font-size: 11px;"></i> 
+                        <span style="font-size: 9px; color: var(--text-dim);">UP</span>
                     </div>
-                    <span class="value" id="uploadValue" style="font-size: 20px; font-weight: 800; color: var(--accent);">-- <small style="font-size: 11px; color: var(--text-dim); font-weight: 500;">Mbps</small></span>
+                    <span class="value" id="uploadValue" style="font-size: 14px; font-weight: 800; color: var(--accent);">-- <small style="font-size: 9px; color: var(--text-dim);">Mb</small></span>
                 </div>
             </div>
         </div>
 
-        <div style="padding: 20px; margin-top: auto;">
-            <button id="startBtn" class="btn btn-primary" style="width: 100%; border-radius: 12px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <i class="fa-solid fa-play"></i> INICIAR TESTE
+        <div style="padding: 5px 12px 10px 12px; margin-top: auto;">
+            <button id="startBtn" class="btn btn-primary" style="width: 100%; padding: 6px; border-radius: 8px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: #000; font-weight: bold; border: none; cursor: pointer;">
+                <i class="fa-solid fa-play"></i> INICIAR
+            </button>
+        </div>
+        </div>
+
+        <!-- Radar Tab -->
+        <div id="tab-radar" class="tab-content" style="padding: 5px 10px; flex: 1; flex-direction: column; overflow-y: auto;">
+            <div class="radar-list" id="radarList" style="display: flex; flex-direction: column; flex: 1;">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Network Tab -->
+        <div id="tab-network" class="tab-content" style="padding: 10px; flex: 1; flex-direction: column; gap: 8px;">
+            <div class="net-info-card">
+                <div class="net-label">Conexão Atual</div>
+                <div class="net-value" id="netInterface">Carregando...</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <div class="net-info-card" style="flex: 1; cursor: pointer;" onclick="copyIp('local')" title="Clique para copiar">
+                    <div class="net-label">IP Local <i class="fa-regular fa-copy" style="font-size: 10px; margin-left: 4px; opacity: 0.5;"></i></div>
+                    <div class="net-value" id="netLocalIp">...</div>
+                </div>
+                <div class="net-info-card" style="flex: 1; cursor: pointer;" onclick="copyIp('public')" title="Clique para copiar">
+                    <div class="net-label">IP Público <i class="fa-regular fa-copy" style="font-size: 10px; margin-left: 4px; opacity: 0.5;"></i></div>
+                    <div class="net-value" id="netPublicIp">...</div>
+                </div>
+            </div>
+            
+            <button class="repair-btn" id="repairBtn" onclick="doRepair()" style="margin-top: auto;">
+                <i class="fa-solid fa-screwdriver-wrench"></i> Limpar DNS e Reparar
             </button>
         </div>
     </div>

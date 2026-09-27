@@ -15,12 +15,27 @@ Para iniciar o projeto pela primeira vez:
 * **Testes**: Ao abrir, inicie o teste através da interface. O backend Python executará o `speedtest-cli` e enviará os resultados em tempo real via IPC (Inter-Process Communication) para o front-end.
 
 ## Estrutura do Projeto
-* `/ui`: Interface gráfica (HTML/CSS/JS).
+* `ookla/`: Documentação específica do motor de testes Speedtest.
+* `ui/`: Interface gráfica (HTML, CSS e lógica frontend).
+* `.gitignore`: Definições de arquivos ignorados pelo versionamento (incluindo dependências, builds e configurações de IDE).
 * `backend.py`: Script Python responsável pela execução do teste de velocidade.
-* `main.js` / `preload.js`: Ciclo de vida da aplicação Electron e integração entre processos.
-* `start.bat`: Script de automação para preparação do ambiente.
+* `main.js`: Ponto de entrada do Electron, gerenciamento de janelas e IPC (Inter-Process Communication).
+* `preload.js`: Ponte de segurança entre o Node.js e o frontend.
+* `package.json` / `package-lock.json`: Definições e versões das dependências do Node.js.
+* `requirements.txt`: Lista de dependências Python.
+* `speedtest.exe`: Binário auxiliar para testes de rede.
+* `start.bat`: Script de automação para instalação e inicialização.
+* `sync.js`: Utilitário de sincronização de dados.
+* `window-snapper.js`: Lógica para o comportamento "magnético" da janela.
 
-## Requisitos
-* Python 3 instalado no sistema.
-* Node.js / NPM.
-* As dependências do Python (`speedtest-cli`) são gerenciadas durante o processo de inicialização automática.
+## Dependências
+- **Python**: `speedtest-cli`
+- **Node.js**: Electron, `child_process`, `os` (gerenciadas via `package.json`)
+
+## 📋 Histórico de Atualizações
+
+### 🔄 Atualização (27/09/2026)
+- Refatoração da estrutura do projeto para incluir suporte a `WindowSnapper`, nova lógica de IPC (ping e reparo de rede) e integração com a API `ipify` para status da rede em tempo real.
+- Atualização do `.gitignore` para ignorar novos arquivos de build, logs e pastas de IDE.
+- Implementação de `single-instance-lock` para evitar múltiplas execuções do aplicativo.
+- Otimização do gerenciamento de tray icon e comportamentos da janela (tamanho e foco).
