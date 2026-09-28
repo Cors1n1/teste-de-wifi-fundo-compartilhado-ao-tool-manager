@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
     const pingValue = document.getElementById('pingValue');
     const downloadValue = document.getElementById('downloadValue');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pingValue.innerHTML = `${final.ping.toFixed(1)} <small>ms</small>`;
                 downloadValue.innerHTML = `${(final.download / 1000000).toFixed(2)} <small>Mbps</small>`;
                 uploadValue.innerHTML = `${(final.upload / 1000000).toFixed(2)} <small>Mbps</small>`;
-                statusText.textContent = 'Teste concluído!';
+                statusText.textContent = 'Teste concluÃ­do!';
                 startBtn.disabled = false;
                 startBtn.textContent = 'Testar Novamente';
                 break;
@@ -84,7 +84,7 @@ async function syncSpotifyTheme() {
         }
     } catch(e) {}
     
-    // Default fallback: remove o fundo da capa, mas MANTÉM as cores da última música
+    // Default fallback: remove o fundo da capa, mas MANTÃ‰M as cores da Ãºltima mÃºsica
     document.body.classList.remove('theme-spotify-cover');
     document.documentElement.style.setProperty('--sp-bg-img', 'none');
     // document.documentElement.style.setProperty('--accent-rgb', '0, 229, 255');
@@ -187,7 +187,7 @@ async function pingAll() {
             if (ms >= 0) {
                 valEl.innerHTML = `${ms} <small style="font-size: 9px; color: var(--text-dim);">ms</small>`;
                 valEl.className = 'ping-value ' + (ms < 50 ? 'good' : (ms < 100 ? 'warn' : 'bad'));
-                statEl.innerText = ms < 50 ? 'Excelente' : (ms < 100 ? 'Razoável' : 'Ruim');
+                statEl.innerText = ms < 50 ? 'Excelente' : (ms < 100 ? 'RazoÃ¡vel' : 'Ruim');
                 statEl.style.color = ms < 50 ? 'var(--success)' : (ms < 100 ? '#f1c40f' : '#e74c3c');
             } else {
                 valEl.innerHTML = `ERR`;
@@ -275,3 +275,62 @@ window.switchTab = function(btn, tabId) {
         loadNetworkInfo();
     }
 };
+
+
+
+let isPinging = false;
+
+function toggleContinuousPing() {
+    const btn = document.getElementById('togglePingBtn');
+    const status = document.getElementById('pingStatus');
+    const realTime = document.getElementById('pingRealTime');
+    
+    if (isPinging) {
+        window.api.stopContinuousPing();
+        isPinging = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> INICIAR PING';
+        btn.style.background = 'var(--accent)';
+        btn.style.color = '#000';
+        status.innerText = 'Pausado';
+        status.style.color = 'var(--text-dim)';
+    } else {
+        window.api.startContinuousPing('8.8.8.8');
+        isPinging = true;
+        btn.innerHTML = '<i class="fa-solid fa-stop"></i> PARAR PING';
+        btn.style.background = 'rgba(255, 74, 74, 0.2)';
+        btn.style.color = 'var(--danger)';
+        status.innerText = 'Conectando...';
+        status.style.color = 'var(--accent)';
+        realTime.innerHTML = '-- <span style="font-size: 14px; color: var(--text-dim);">ms</span>';
+    }
+}
+
+if (window.api && window.api.onContinuousPingUpdate) {
+    window.api.onContinuousPingUpdate((data) => {
+        const realTime = document.getElementById('pingRealTime');
+        const status = document.getElementById('pingStatus');
+        
+        if (data.status === 'timeout') {
+            realTime.innerHTML = 'FAIL';
+            realTime.style.color = 'var(--danger)';
+            status.innerText = 'Perda de Pacote!';
+            status.style.color = 'var(--danger)';
+        } else {
+            realTime.innerHTML = data.ms + ' <span style="font-size: 14px; color: var(--text-dim);">ms</span>';
+            
+            if (data.ms < 50) {
+                realTime.style.color = 'var(--success)';
+                status.innerText = 'Conexão Excelente';
+                status.style.color = 'var(--success)';
+            } else if (data.ms < 100) {
+                realTime.style.color = 'var(--warning)';
+                status.innerText = 'Conexão Estável';
+                status.style.color = 'var(--warning)';
+            } else {
+                realTime.style.color = 'var(--danger)';
+                status.innerText = 'Latência Alta';
+                status.style.color = 'var(--danger)';
+            }
+        }
+    });
+}

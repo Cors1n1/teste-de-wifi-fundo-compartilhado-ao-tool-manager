@@ -1,93 +1,143 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste WiFi Portátil</title>
+    <title>Teste WiFi PortÃ¡til</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* === FIX COMPACT LAYOUT FOR 320x220 === */
+        .header { padding: 8px 12px 6px 12px !important; }
+        .header .title { font-size: 11px !important; }
+        .header-actions { transform: scale(0.9); margin-right: -4px; }
+        
+        .tabs-container { padding: 0 10px !important; margin-bottom: 5px !important; }
+        .tab-btn { font-size: 10px !important; padding: 4px 8px !important; }
+        
+        .system-dashboard { padding: 4px 8px !important; gap: 4px !important; }
+        .metric-chip { padding: 4px 2px !important; }
+        .metric-chip span.value { font-size: 12px !important; }
+        .metric-chip i { font-size: 10px !important; }
+        .btn-primary { padding: 6px !important; font-size: 11px !important; }
+        
+        #tab-speedtest > div:last-child { padding: 4px 12px 6px 12px !important; }
+        
+        /* Network Tab */
+        .net-info-card { padding: 6px 8px !important; }
+        .net-label { font-size: 9px !important; margin-bottom: 2px !important; }
+        .net-value { font-size: 11px !important; }
+        #tab-network { padding: 6px 8px !important; gap: 4px !important; }
+        .repair-btn { padding: 6px !important; font-size: 10px !important; margin-top: 2px !important; }
+        
+        #statusText { font-size: 12px !important; font-weight: bold; margin-bottom: 2px !important; }
+    </style>
 </head>
 <body>
     <div class="widget-container">
-        <!-- Header -->
-        
-        <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab(this, 'speedtest')">
-                <i class="fa-solid fa-gauge-high"></i> Velocidade
-            </button>
-            <button class="tab-btn" onclick="switchTab(this, 'radar')">
-                <i class="fa-solid fa-satellite-dish"></i> Radar
-            </button>
-            <button class="tab-btn" onclick="switchTab(this, 'network')">
-                <i class="fa-solid fa-network-wired"></i> Rede
-            </button>
-            <div class="header-actions" style="margin-left: auto;">
-                <button class="icon-btn" onclick="window.api.quitApp()" title="Sair"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        </div>
-<div class="header" style="display:none;">
-            <div class="title" style="font-size: 13px;">
-                <i class="fa-solid fa-wifi" style="color: var(--accent); margin-right: 5px; filter: drop-shadow(0 0 5px var(--accent));"></i> SpeedTest
+        <!-- HEADER -->
+        <div class="header">
+            <div class="title">
+                <i class="fa-solid fa-wifi"></i> Teste WiFi
             </div>
             <div class="header-actions">
-                <button class="icon-btn" onclick="window.api.quitApp()" title="Sair"><i class="fa-solid fa-xmark"></i></button>
+                <button class="icon-btn" id="pinBtn" onclick="togglePin()" title="Fixar Janela"><i class="fa-solid fa-thumbtack"></i></button>
+                                <div class="theme-menu-container" style="position:relative; -webkit-app-region:no-drag; display:inline-block;">
+                    <button class="icon-btn" onclick="document.getElementById('themeMenu').style.display = document.getElementById('themeMenu').style.display === 'none' ? 'block' : 'none'" title="Temas"><i class="fa-solid fa-palette"></i></button>
+                    <div id="themeMenu" style="display:none; position:absolute; top:120%; right:0; background:rgba(20,20,26,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; width:140px; z-index:100; box-shadow:0 10px 30px rgba(0,0,0,0.8); backdrop-filter:blur(10px);">
+                        <div style="font-size:11px; color:var(--text-dim); margin-bottom:10px; text-transform:uppercase; font-weight:600; text-align:center;">Cores</div>
+                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; justify-items:center;">
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(0,229,255);" onclick="document.documentElement.style.setProperty('--accent', '#00e5ff'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(255,0,255);" onclick="document.documentElement.style.setProperty('--accent', '#ff00ff'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(0,255,170);" onclick="document.documentElement.style.setProperty('--accent', '#00ffaa'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(255,136,0);" onclick="document.documentElement.style.setProperty('--accent', '#ff8800'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(255,74,74);" onclick="document.documentElement.style.setProperty('--accent', '#ff4a4a'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(255,215,0);" onclick="document.documentElement.style.setProperty('--accent', '#ffd700'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(155,89,182);" onclick="document.documentElement.style.setProperty('--accent', '#9b59b6'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:rgb(255,255,255);" onclick="document.documentElement.style.setProperty('--accent', '#ffffff'); document.getElementById('themeMenu').style.display='none';"></div>
+                            <div style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:#1db954;" onclick="document.documentElement.style.setProperty('--accent', '#1db954'); document.getElementById('themeMenu').style.display='none';"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="icon-btn" onclick="window.api.hideApp()" title="Minimizar"><i class="fa-solid fa-minus"></i></button>
+                <button class="icon-btn" onclick="window.api.quitApp()" title="Sair" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--text-dim)'"><i class="fa-solid fa-power-off"></i></button>
             </div>
         </div>
 
-        <!-- Dashboard -->
+        <!-- TABS -->
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab(this, 'speedtest')"><i class="fa-solid fa-gauge-high"></i> Vel</button>
+            <button class="tab-btn" onclick="switchTab(this, 'ping')"><i class="fa-solid fa-stopwatch"></i> Ping</button>
+            <button class="tab-btn" onclick="switchTab(this, 'radar')"><i class="fa-solid fa-satellite-dish"></i> Radar</button>
+            <button class="tab-btn" onclick="switchTab(this, 'network')"><i class="fa-solid fa-network-wired"></i> Rede</button>
+        </div>
+
+        <!-- TAB: SPEEDTEST -->
         <div id="tab-speedtest" class="tab-content active">
-        <div class="system-dashboard" style="padding: 8px 12px 5px 12px; gap: 8px;">
-            <div class="dash-main" style="justify-content: center; text-align: center;">
-                <div class="dash-time" id="statusText" style="font-size: 14px; margin-bottom: 2px;">Pronto para iniciar</div>
-                <div class="dash-weather" id="serverInfo" style="margin-top: 0px; justify-content: center; background: transparent; border: none; box-shadow: none; font-size: 10px; padding: 2px;"></div>
+            <div class="system-dashboard">
+                <div class="dash-main" style="justify-content: center; text-align: center;">
+                    <div class="dash-time" id="statusText">Pronto para iniciar</div>
+                    <div class="dash-weather" id="serverInfo" style="margin-top: 0px; justify-content: center; background: transparent; border: none; box-shadow: none; font-size: 10px; padding: 2px;"></div>
+                </div>
+                
+                <div class="dash-metrics" style="flex-direction: row; gap: 6px;">
+                    <div class="metric-chip" style="flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
+                            <i class="fa-solid fa-stopwatch"></i> 
+                            <span style="font-size: 9px; color: var(--text-dim);">PING</span>
+                        </div>
+                        <span class="value" id="pingValue" style="font-weight: 800; color: var(--text-primary);">-- <small style="font-size: 9px; color: var(--text-dim);">ms</small></span>
+                    </div>
+
+                    <div class="metric-chip" style="flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
+                            <i class="fa-solid fa-download"></i> 
+                            <span style="font-size: 9px; color: var(--text-dim);">DOWN</span>
+                        </div>
+                        <span class="value" id="downloadValue" style="font-weight: 800; color: var(--success);">-- <small style="font-size: 9px; color: var(--text-dim);">Mb</small></span>
+                    </div>
+
+                    <div class="metric-chip" style="flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
+                            <i class="fa-solid fa-upload"></i> 
+                            <span style="font-size: 9px; color: var(--text-dim);">UP</span>
+                        </div>
+                        <span class="value" id="uploadValue" style="font-weight: 800; color: var(--accent);">-- <small style="font-size: 9px; color: var(--text-dim);">Mb</small></span>
+                    </div>
+                </div>
             </div>
-            
-            <div class="dash-metrics" style="flex-direction: row; gap: 6px;">
-                <div class="metric-chip" style="padding: 6px 4px; flex-direction: column; align-items: center;">
-                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
-                        <i class="fa-solid fa-stopwatch" style="font-size: 11px;"></i> 
-                        <span style="font-size: 9px; color: var(--text-dim);">PING</span>
-                    </div>
-                    <span class="value" id="pingValue" style="font-size: 14px; font-weight: 800; color: var(--text-primary);">-- <small style="font-size: 9px; color: var(--text-dim);">ms</small></span>
-                </div>
 
-                <div class="metric-chip" style="padding: 6px 4px; flex-direction: column; align-items: center;">
-                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
-                        <i class="fa-solid fa-download" style="font-size: 11px;"></i> 
-                        <span style="font-size: 9px; color: var(--text-dim);">DOWN</span>
-                    </div>
-                    <span class="value" id="downloadValue" style="font-size: 14px; font-weight: 800; color: var(--success);">-- <small style="font-size: 9px; color: var(--text-dim);">Mb</small></span>
-                </div>
-
-                <div class="metric-chip" style="padding: 6px 4px; flex-direction: column; align-items: center;">
-                    <div style="display: flex; gap: 4px; align-items: center; margin-bottom: 2px;">
-                        <i class="fa-solid fa-upload" style="font-size: 11px;"></i> 
-                        <span style="font-size: 9px; color: var(--text-dim);">UP</span>
-                    </div>
-                    <span class="value" id="uploadValue" style="font-size: 14px; font-weight: 800; color: var(--accent);">-- <small style="font-size: 9px; color: var(--text-dim);">Mb</small></span>
-                </div>
+            <div style="margin-top: auto;">
+                <button id="startBtn" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; cursor: pointer;">
+                    <i class="fa-solid fa-rocket"></i> INICIAR
+                </button>
             </div>
         </div>
 
-        <div style="padding: 5px 12px 10px 12px; margin-top: auto;">
-            <button id="startBtn" class="btn btn-primary" style="width: 100%; padding: 6px; border-radius: 8px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: #000; font-weight: bold; border: none; cursor: pointer;">
-                <i class="fa-solid fa-play"></i> INICIAR
+        <!-- TAB: PING CONTÍNUO -->
+        <div id="tab-ping" class="tab-content" style="padding: 10px; flex: 1; flex-direction: column; gap: 8px; text-align: center;">
+            <div class="net-info-card" style="padding: 10px !important;">
+                <div class="net-label" style="font-size: 10px !important; font-weight: bold; color: var(--text-dim);">MONITORAMENTO DE ESTABILIDADE</div>
+                <div id="pingRealTime" style="font-size: 28px; font-weight: 800; color: var(--text-primary); margin: 5px 0;">-- <span style="font-size: 14px; color: var(--text-dim);">ms</span></div>
+                <div id="pingStatus" style="font-size: 11px; font-weight: 600; color: var(--text-dim);">Clique em iniciar</div>
+            </div>
+            <button id="togglePingBtn" class="btn btn-primary" onclick="toggleContinuousPing()" style="margin-top: auto; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; cursor: pointer; padding: 6px !important; font-size: 11px !important;">
+                <i class="fa-solid fa-play"></i> INICIAR PING
             </button>
         </div>
-        </div>
 
-        <!-- Radar Tab -->
+        <!-- TAB: RADAR -->
         <div id="tab-radar" class="tab-content" style="padding: 5px 10px; flex: 1; flex-direction: column; overflow-y: auto;">
             <div class="radar-list" id="radarList" style="display: flex; flex-direction: column; flex: 1;">
                 <!-- Populated by JS -->
             </div>
         </div>
 
-        <!-- Network Tab -->
+        <!-- TAB: NETWORK -->
         <div id="tab-network" class="tab-content" style="padding: 10px; flex: 1; flex-direction: column; gap: 8px;">
             <div class="net-info-card">
-                <div class="net-label">Conexão Atual</div>
+                <div class="net-label">ConexÃ£o Atual</div>
                 <div class="net-value" id="netInterface">Carregando...</div>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -96,17 +146,24 @@
                     <div class="net-value" id="netLocalIp">...</div>
                 </div>
                 <div class="net-info-card" style="flex: 1; cursor: pointer;" onclick="copyIp('public')" title="Clique para copiar">
-                    <div class="net-label">IP Público <i class="fa-regular fa-copy" style="font-size: 10px; margin-left: 4px; opacity: 0.5;"></i></div>
+                    <div class="net-label">IP PÃºblico <i class="fa-regular fa-copy" style="font-size: 10px; margin-left: 4px; opacity: 0.5;"></i></div>
                     <div class="net-value" id="netPublicIp">...</div>
                 </div>
             </div>
             
-            <button class="repair-btn" id="repairBtn" onclick="doRepair()" style="margin-top: auto;">
+            <button class="repair-btn" id="repairBtn" onclick="doRepair()" style="margin-top: auto; width: 100%;">
                 <i class="fa-solid fa-screwdriver-wrench"></i> Limpar DNS e Reparar
             </button>
         </div>
     </div>
 
+    <script>
+        function togglePin() { window.api.togglePin(); }
+        function openThemePicker() { /* Needs implementation if not global */ }
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
+
+
+

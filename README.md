@@ -19,8 +19,8 @@ Para iniciar o projeto pela primeira vez:
 * `ui/`: Interface gráfica (HTML, CSS e lógica frontend).
 * `.gitignore`: Definições de arquivos ignorados pelo versionamento (incluindo dependências, builds e configurações de IDE).
 * `backend.py`: Script Python responsável pela execução do teste de velocidade.
-* `main.js`: Ponto de entrada do Electron, gerenciamento de janelas e IPC (Inter-Process Communication).
-* `preload.js`: Ponte de segurança entre o Node.js e o frontend.
+* `main.js`: Ponto de entrada do Electron, gerenciamento de janelas e IPC (incluindo lógica para ping contínuo).
+* `preload.js`: Ponte de segurança entre o Node.js e o frontend, expondo novas APIs de ping contínuo e controle de janela.
 * `package.json` / `package-lock.json`: Definições e versões das dependências do Node.js.
 * `requirements.txt`: Lista de dependências Python.
 * `speedtest.exe`: Binário auxiliar para testes de rede.
@@ -33,6 +33,12 @@ Para iniciar o projeto pela primeira vez:
 - **Node.js**: Electron, `child_process`, `os` (gerenciadas via `package.json`)
 
 ## 📋 Histórico de Atualizações
+
+### 🔄 Atualização (28/09/2026)
+- Implementação de funcionalidade de Ping Contínuo (`start-continuous-ping`) via IPC.
+- Atualização da `preload.js` para expor métodos de controle de janela (fixar, esconder) e monitoramento de ping.
+- Ajustes de CSS na interface para otimização em telas de 320x220 pixels.
+- Adição de menu de temas e botões de controle de janela no `index.html`.
 
 ### 🔄 Atualização (27/09/2026)
 - Refatoração da estrutura do projeto para incluir suporte a `WindowSnapper`, nova lógica de IPC (ping e reparo de rede) e integração com a API `ipify` para status da rede em tempo real.

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, nativeImage, Menu, clipboard } = require('electron');
+﻿const { app, BrowserWindow, ipcMain, Tray, nativeImage, Menu, clipboard } = require('electron');
 const path = require('path');
 const os = require('os');
 const { spawn } = require('child_process');
@@ -241,3 +241,31 @@ ipcMain.on('start-test', (event) => {
         event.reply('test-event', { event: 'error', data: 'Erro: ' + e.message });
     }
 });
+
+
+
+let continuousPingProcess = null;
+
+ipcMain.on('start-continuous-ping', (event, host) => {
+    if (continuousPingProcess) continuousPingProcess.kill();
+    continuousPingProcess = spawn('ping', ['-t', host || '8.8.8.8']);
+    
+    continuousPingProcess.stdout.on('data', (data) => {
+        const output = data.toString('latin1');
+        const match = output.match(/tempo[=<](\d+)ms/i) || output.match(/time[=<](\d+)ms/i);
+        if (match) {
+            event.sender.send('continuous-ping-update', { ms: parseInt(match[1]), status: 'success' });
+        } else if (output.includes('Esgotado') || output.includes('Request timed out')) {
+            event.sender.send('continuous-ping-update', { ms: 0, status: 'timeout' });
+        }
+    });
+});
+
+ipcMain.on('stop-continuous-ping', () => {
+    if (continuousPingProcess) {
+        continuousPingProcess.kill();
+        continuousPingProcess = null;
+    }
+});
+
+
